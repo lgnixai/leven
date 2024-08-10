@@ -193,6 +193,7 @@ pub fn go_parse_pratt_expr(
 }
 
 pub fn parse_expression(input: Tokens) -> TokenResult<Positioned<Expression>> {
+    //println!("==if=={:?}==",parse_pratt_expr(input, Precedence::PLowest));
     parse_pratt_expr(input, Precedence::PLowest)
 }
 

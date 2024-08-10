@@ -7,17 +7,32 @@ use tsr_runtime::{
     value::{builders::ObjectBuilder, Value},
     FunctionBuilder, Runtime,
 };
+use tsr_runtime::api::events::Events;
 
 #[test]
 fn main() -> io::Result<()> {
-    let path = "main.tsx";
+    let path = "ts/if.ts";
     let input = fs::read_to_string(path)?;
     let code = input.as_bytes();
 
     let (_, tokens) = Lexer::lex_tokens(code.into()).unwrap();
     let (_, ast) = Parser::parse_tokens(&tokens).unwrap();
     let mut runtime = Runtime::default();
-
+    runtime.set_variable(
+        "print",
+        Span::default().wrap(FunctionBuilder::new("log")
+            .param("data", PredefinedType::Any)
+            .returns(PredefinedType::Void)
+            .build(|args| {
+                if let Some(data) = args.get("data") {
+                    //println!("{:?}",data);
+                    match data {
+                        Value::String(data) => println!("{data}"),
+                        data => println!("{data:#}"),
+                    }
+                }
+            })),
+    );
     runtime.set_variable(
         "console",
         Span::default().wrap(
@@ -42,9 +57,10 @@ fn main() -> io::Result<()> {
 
     runtime.add_module(&Reflection);
     runtime.add_module(&Util);
+    runtime.add_module(&Events);
 
     println!("{}", runtime.eval_program(ast).format(path, &input));
-    // println!("{:#?}", runtime.get_context());
+    //println!("{:#?}", runtime.get_context());
 
     Ok(())
 }

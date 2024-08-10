@@ -5,6 +5,8 @@ use crate::{value::Value, Runtime};
 
 impl Runtime {
     pub fn eval_if(&mut self, statement: Positioned<IfStatement>) -> Value {
+        println!("fuck");
+
         Value::None
     }
 }

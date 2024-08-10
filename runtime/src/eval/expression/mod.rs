@@ -11,6 +11,7 @@ pub mod index;
 pub mod literal;
 pub mod new;
 pub mod switch;
+mod util;
 
 impl Runtime {
     pub fn eval_expression(&mut self, expression: Positioned<Expression>) -> Value {

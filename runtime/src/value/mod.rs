@@ -92,7 +92,7 @@ fn format_message(message: &str, args: impl Args) -> String {
 /* macro_rules! errors {
     ($( $error_name:ident: $error_code:literal => $error_message:expr );*;) => {
         #[derive(PartialEq, Clone, Copy, Debug)]
-        pub enum ErrorCode {
+        pub enum.ts ErrorCode {
             $(
                 $error_name = $error_code
             ),*

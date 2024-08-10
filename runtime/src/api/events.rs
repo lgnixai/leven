@@ -20,7 +20,12 @@ impl Events {
     fn hello_world() {
 
     }
+    #[func(name = "Genv", args = [("value", PredefinedType::Any)], returns = PredefinedType::String)]
+    fn genv(&self, args: &FArguments) -> Option<impl Into<Value>> {
+        //let pretty = args.get_boolean("pretty");
 
+        args.get("value").map(|value| format!("{value:#}"))
+    }
     #[func(name = "getType", args = [("value", PredefinedType::Any)], returns = PredefinedType::String)]
     fn get_type(&self, args: &FArguments) -> Option<impl Into<Value>> {
         args.get("data")

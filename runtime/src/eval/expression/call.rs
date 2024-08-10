@@ -9,7 +9,7 @@ impl Runtime {
     pub fn eval_call(&mut self, call: Positioned<FunctionCallExpression>) -> Value {
         let (span, call) = call.unpack();
         let func = match self.eval_expression(*call.function) {
-            Value::Reference(path, scope) => match todo!() {
+            //Value::Reference(path, scope) => match todo!() {
                 Value::Reference(path, scope) => self
                     .context
                     .lock()
@@ -19,8 +19,8 @@ impl Runtime {
                     .value
                     .clone(),
                 value => value,
-            },
-            value => value,
+            // },
+            // value => value,
         };
         let mut args = call
             .arguments
@@ -29,7 +29,7 @@ impl Runtime {
                 (
                     argument.span,
                     match self.eval_expression(argument) {
-                        Value::Reference(path, scope) => todo!(),
+                       //Value::Reference(path, scope) => todo!(),
                         value => value,
                     },
                 )
