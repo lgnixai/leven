@@ -1,7 +1,13 @@
 
-let a=3;
+let a=5;
 
-
-if a==3 {
+let b;
+if a==5 {
     console.log("work");
+    console.log("work asfsad");
+   let b=10;
+}else{
+    console.log("work up");
+    let b=20;
 }
+console.log(b)

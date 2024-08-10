@@ -13,8 +13,8 @@ impl Runtime {
         let left = self.resolve_if_reference(left);
         let right = self.resolve_if_reference(right);
 
-        println!("{left} {:?} {right}", expression.operator.value);
-        println!("{left} {:?} {right}", expression.operator.value);
+        println!("left{left} op {:?}right {right}", expression.operator.value);
+        //println!("{left} {:?} {right}", expression.operator.value);
 
         match expression.operator.value {
             Operator::And => todo!(),
@@ -117,7 +117,14 @@ impl Runtime {
 
                     Value::None
                 }
-                (_, _) => todo!(),
+                (_, _) => {
+                    // let left = self.resolve_if_reference(left);
+                    // let left_clone = left.clone();
+                    // let right_clone = right.clone();
+                    //println!("{:?}:{:?}", left_clone, right_clone);
+                    //println!("{:?}:{:?}",left.clone(),right.clone());
+                    Value::None
+                },
             },
             Operator::Ne => Value::Boolean(left != right),
             Operator::Le => todo!(),

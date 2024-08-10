@@ -10,7 +10,7 @@ impl Runtime {
     pub fn declare_variable(&mut self, variables: Positioned<VariableStatement>) -> Value {
         let (span, variables) = variables.unpack();
         let mut last = Value::None;
-
+        println!("variables=={:?}",variables);
         for variable in variables.declarations {
             let (span, variable) = variable.unpack();
 

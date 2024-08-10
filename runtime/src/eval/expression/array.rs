@@ -12,7 +12,11 @@ impl Runtime {
         let elements = elements
             .into_iter()
             .map(|expression| match self.eval_expression(expression) {
-                Value::Reference(path, scope) => todo!(),
+                Value::Reference(path, scope) => {
+
+                    //println!("=={:?},{:?}",path,scope);
+                    Value::None
+                },
                 value => value,
             })
             .collect::<Vec<_>>();
