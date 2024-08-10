@@ -1,5 +1,2 @@
-# TypeScript Runtime (`TSR`)
-
-The real runtime for TypeScript! Almost.
-
-Note: It's 3:30 AM and it's too hard for me to come up with a good description for this project.
+# 实现一个 pinescript 的解析器和执行器。
+正在实施中，暂不可用。
