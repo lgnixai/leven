@@ -65,7 +65,7 @@ pub fn parse_from_clause(input: Tokens) -> TokenResult<Positioned<String>> {
 }
 
 pub fn parse_code_block(input: Tokens) -> TokenResult<Block> {
-    println!("map");
+
     let (input, start) = position(input)?;
     let (input, value) = delimited(
         brace_open_tag,

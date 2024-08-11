@@ -38,6 +38,7 @@ use tsr_lexer::{
     token::Modifier,
     tokens::Tokens,
 };
+use tsr_lexer::state::AstState;
 
 pub fn parse_property_name(input: Tokens) -> TokenResult<Positioned<PropertyName>> {
     positioned(alt((
@@ -133,7 +134,7 @@ pub fn parse_statement(input: Tokens) -> TokenResult<Positioned<Statement>> {
             type_alias::parse_type_alias_declaration,
             Statement::TypeAliasDeclaration,
         ),
-        map(class::parse_class_declaration, Statement::ClassDeclaration),
+        // map(class::parse_class_declaration, Statement::ClassDeclaration),
         map(
             interface::parse_interface_declaration,
             Statement::InterfaceDeclaration,
@@ -158,43 +159,4 @@ pub fn parse_statement(input: Tokens) -> TokenResult<Positioned<Statement>> {
     )))(input)
 }
 
-pub fn parse_program_statement(input: Tokens) -> TokenResult<Positioned<Statement>> {
-    terminated(
-        positioned(alt((
-            map(import::parse_import_declaration, |declaration| {
-                Statement::ImportDeclaration(Box::new(declaration))
-            }),
-            map(
-                export::parse_export_declaration,
-                Statement::ExportDeclaration,
-            ),
-            map(
-                type_alias::parse_type_alias_declaration,
-                Statement::TypeAliasDeclaration,
-            ),
-            map(class::parse_class_declaration, Statement::ClassDeclaration),
-            map(
-                interface::parse_interface_declaration,
-                Statement::InterfaceDeclaration,
-            ),
-            map(
-                function::parse_function_declaration,
-                Statement::FunctionDeclaration,
-            ),
-            map(
-                enumeration::parse_enum_declaration,
-                Statement::EnumDeclaration,
-            ),
-            map(
-                variable::parse_variable_statement,
-                Statement::VariableStatement,
-            ),
-            map(if_else::parse_if_statement, |statement| {
-                Statement::IfStatement(Box::new(statement))
-            }),
-            returning::parse_return_statement,
-            map(expression::parse_expression, Statement::Expression),
-        ))),
-        opt(semi_tag),
-    )(input)
-}
+

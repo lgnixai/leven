@@ -11,6 +11,7 @@ use tsr_lexer::{
     token::{BuiltInType, Delimiter, Modifier, Operator, Punctuation, ReservedWord, Token},
     tokens::Tokens,
 };
+use tsr_lexer::state::AstState;
 
 macro_rules! tokens {
     ($($func_name:ident => $tag:expr;)*) => {
@@ -129,6 +130,15 @@ pub fn position(input: Tokens) -> TokenResult<Span> {
     ))
 }
 
+pub fn positioned2<'a, F, O1>(parser: F) -> impl FnMut(Tokens<'a>) -> TokenResult<'a, Positioned<O1>>
+where
+    F: Parser<Tokens<'a>, O1, Error<Tokens<'a>>>,
+{
+    map(
+        tuple((position, parser, position)),
+        |(start, result, end)| start.between(end).wrap(result),
+    )
+}
 pub fn positioned<'a, F, O1>(parser: F) -> impl FnMut(Tokens<'a>) -> TokenResult<'a, Positioned<O1>>
 where
     F: Parser<Tokens<'a>, O1, Error<Tokens<'a>>>,

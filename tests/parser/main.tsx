@@ -1,0 +1,4 @@
+
+disyplay()=>{
+    return x
+}

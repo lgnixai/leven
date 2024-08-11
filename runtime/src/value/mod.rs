@@ -8,7 +8,7 @@ use std::{
     fmt::{Display, Formatter},
     hash::{Hash, Hasher},
 };
-use tsr_lexer::globals::Span;
+use tsr_lexer::globals::{Positioned, Span};
 use tsr_parser::ast::{
     ArraySize, Block, IntersectionOrPrimaryType, Literal, PredefinedType, PrimaryType, Type,
     UnionOrIntersectionOrPrimaryType,
@@ -184,6 +184,9 @@ pub struct MethodSignature {
 pub struct ConstructSignature {
     pub parameters: Vec<PropertySignature>,
     pub ty: Type,
+
+
+
 }
 
 #[derive(PartialEq, Clone, Debug)]
@@ -253,7 +256,7 @@ pub struct Function {
     pub is_static: bool,
     pub name: String,
     pub parameters: Vec<Parameter>,
-    pub ty: Type,
+    pub ty: Option<Positioned<Type>>,
     pub body: Block,
 }
 
@@ -266,7 +269,7 @@ pub struct NativeFunction {
     pub visibility: Visibility,
     pub name: String,
     pub parameters: Vec<Parameter>,
-    pub ty: Type,
+    pub ty: Option<Positioned<Type>>,
 
     #[derivative(Debug = "ignore")]
     pub body: Arc<dyn Fn(&mut FArguments)>,
@@ -587,7 +590,7 @@ impl Display for Value {
                 "[Function {}({}) => {}]",
                 function.name,
                 function.parameters.len(),
-                function.ty
+                function.ty.clone().unwrap().value
             ),
             Value::Interface {
                 name,

@@ -14,14 +14,38 @@ use tsr_lexer::{
     token::Modifier,
     tokens::Tokens,
 };
+use tsr_lexer::state::AstState;
+use crate::parsing::statement::expression::parse_expression;
+use crate::tags::fat_arrow_tag;
+
+// pub fn parse_function_declaration(input: Tokens) -> TokenResult<Positioned<FunctionDeclaration>> {
+//     positioned(map(
+//         tuple((
+//             opt(positioned(value(Modifier::Async, async_tag))),
+//             preceded(function_tag, parse_ident),
+//             parse_call_signature,
+//             opt(parse_code_block),
+//         )),
+//         |(async_modifier, name, signature, body)| FunctionDeclaration {
+//             name,
+//             type_parameters: signature.value.0,
+//             parameters: signature.value.1,
+//             ty: signature.value.2,
+//             body,
+//             modifiers: async_modifier
+//                 .map(|modifier| vec![modifier])
+//                 .unwrap_or_default(),
+//         },
+//     ))(input)
+// }
 
 pub fn parse_function_declaration(input: Tokens) -> TokenResult<Positioned<FunctionDeclaration>> {
     positioned(map(
         tuple((
             opt(positioned(value(Modifier::Async, async_tag))),
-            preceded(function_tag, parse_ident),
+             parse_ident,
             parse_call_signature,
-            opt(parse_code_block),
+            opt( parse_code_block),
         )),
         |(async_modifier, name, signature, body)| FunctionDeclaration {
             name,

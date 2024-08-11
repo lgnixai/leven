@@ -11,12 +11,13 @@ use tsr_runtime::api::events::Events;
 
 #[test]
 fn main() -> io::Result<()> {
-    let path = "ts/if.ts";
+    let path = "ts/arrowfunction.ts";
     let input = fs::read_to_string(path)?;
     let code = input.as_bytes();
 
     let (_, tokens) = Lexer::lex_tokens(code.into()).unwrap();
-    let (_, ast) = Parser::parse_tokens(&tokens).unwrap();
+    let mut parser =Parser::new();
+    let (_, ast) = parser.parse_tokens(&tokens).unwrap();
     let mut runtime = Runtime::default();
     runtime.set_variable(
         "print",

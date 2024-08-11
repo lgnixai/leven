@@ -223,24 +223,44 @@ fn generate_member(func: ImplItemFn, is_module: bool) -> [proc_macro2::TokenStre
     [quote!(), quote!()]
 }
 
+ 
+/// 这个宏属性用于将一个结构体实现转换为一个原生对象。
+/// 它会解析传入的 `ItemImpl`，并生成相应的成员函数和对象构建函数。
+/// 
+/// # 参数
+/// 
+/// - `_attrs`: 宏属性的参数，这里没有使用。
+/// - `item`: 传入的 `TokenStream`，表示一个结构体的实现。
+/// 
+/// # 返回
+/// 
+/// 返回一个 `TokenStream`，包含生成的实现代码。
 #[proc_macro_attribute]
 pub fn native_object(_attrs: TokenStream, item: TokenStream) -> TokenStream {
+    // 解析传入的 `TokenStream` 为 `ItemImpl`。
     let item_impl = syn::parse::<ItemImpl>(item).unwrap();
 
+    // 获取实现的结构体名称。
     let name = item_impl.self_ty.to_token_stream();
 
+    // 初始化成员函数和对象成员的向量。
     let mut members = vec![];
     let mut object_members = vec![];
 
+    // 遍历实现中的每一项。
     for item in item_impl.items {
+        // 如果项是一个函数实现。
         if let ImplItem::Fn(func) = item {
+            // 生成成员函数和对象成员。
             let [member, object_member] = generate_member(func, false);
 
+            // 将生成的成员函数和对象成员添加到向量中。
             members.push(member);
             object_members.push(object_member);
         }
     }
 
+    // 生成最终的实现代码。
     let result = quote! {
         impl #name {
             #(#members)*
@@ -255,6 +275,7 @@ pub fn native_object(_attrs: TokenStream, item: TokenStream) -> TokenStream {
         }
     };
 
+    // 返回生成的 `TokenStream`。
     TokenStream::from(result)
 }
 

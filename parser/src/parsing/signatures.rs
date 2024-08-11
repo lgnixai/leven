@@ -22,6 +22,7 @@ use tsr_lexer::{
     globals::{Positioned, TokenResult},
     tokens::Tokens,
 };
+use crate::ast::Type;
 
 pub fn parse_call_signature(input: Tokens) -> TokenResult<Positioned<CallSignature>> {
     positioned(map(
@@ -36,9 +37,16 @@ pub fn parse_call_signature(input: Tokens) -> TokenResult<Positioned<CallSignatu
                 separated_list0(comma_tag, parse_parameter),
                 paren_close_tag,
             ),
-            preceded(colon_tag, parse_type),
+            opt (preceded(colon_tag, parse_type)),
         )),
         |(type_parameters, parameters, ty)| {
+
+            // let ty = ty.map(|ty| {
+            //     // Perform the necessary transformation on ty here
+            //     // For example, if you need to wrap it in a specific type or modify it
+            //     // Replace the following line with the actual transformation logic
+            //     ty
+            // });
             CallSignature(type_parameters.unwrap_or_default(), parameters, ty)
         },
     ))(input)

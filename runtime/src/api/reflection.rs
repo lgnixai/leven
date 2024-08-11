@@ -45,7 +45,7 @@ impl Reflection {
                             })
                             .collect::<Vec<_>>(),
                     )
-                    .prop("returnType", ty.to_string())
+                    //.prop("returnType", ty.to_string())
                     .build()
             },
         )

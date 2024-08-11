@@ -6,6 +6,9 @@ publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[dependencies]
+nom = "7.1.3"
+
 [dev-dependencies]
 tsr-macro = { path  = "../macro" }
 tsr-lexer = { path  = "../lexer" }
@@ -15,6 +18,10 @@ tsr-runtime = { path  = "../runtime" }
 [[test]]
 name = "test_lexer"
 path = "lexer.rs"
+
+[[test]]
+name = "parser"
+path = "parser/mod.rs"
 
 [[test]]
 name = "test_parser"

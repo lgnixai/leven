@@ -6,6 +6,7 @@ use tsr_lexer::{
 };
 
 pub fn parse_code_block_expression(input: Tokens) -> TokenResult<Positioned<Expression>> {
+
     map(parse_code_block, |block| {
         block.span.wrap(Expression::Block(block))
     })(input)

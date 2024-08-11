@@ -135,7 +135,7 @@ pub struct MemberFunctionDeclaration {
     pub name: Positioned<PropertyName>,
     pub type_parameters: Vec<Positioned<TypeParameter>>,
     pub parameters: Vec<Positioned<Parameter>>,
-    pub ty: Positioned<Type>,
+    pub ty: Option<Positioned<Type>>,
     pub body: Block,
 }
 
@@ -193,7 +193,7 @@ pub struct FunctionDeclaration {
     pub modifiers: Vec<Positioned<Modifier>>,
     pub type_parameters: Vec<Positioned<TypeParameter>>,
     pub parameters: Vec<Positioned<Parameter>>,
-    pub ty: Positioned<Type>,
+    pub ty: Option<Positioned<Type>>,
     pub body: Option<Block>,
 }
 
@@ -254,14 +254,14 @@ pub enum ArraySize {
 pub struct CallSignature(
     pub Vec<Positioned<TypeParameter>>,
     pub Vec<Positioned<Parameter>>,
-    pub Positioned<Type>,
+    pub Option<Positioned<Type>>,
 );
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct ConstructSignature(
     pub Vec<Positioned<TypeParameter>>,
     pub Vec<Positioned<Parameter>>,
-    pub Positioned<Type>,
+    pub  Option<Positioned<Type>>,
 );
 
 #[derive(PartialEq, Debug, Clone)]

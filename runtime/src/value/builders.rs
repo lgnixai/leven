@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::sync::Arc;
+use tsr_lexer::globals::Positioned;
 
 use crate::value::NativeFunction;
 use crate::value::Parameter;
@@ -32,7 +33,7 @@ pub struct FunctionBuilder {
     visibility: Visibility,
     name: String,
     parameters: Vec<Parameter>,
-    ty: Type,
+    ty: Option<Positioned<Type>>,
 }
 
 impl FunctionBuilder {
@@ -74,7 +75,7 @@ impl FunctionBuilder {
     }
 
     pub fn returns<T: Into<Type>>(mut self, ty: T) -> Self {
-        self.ty = ty.into();
+        //self.ty = ty.into();
 
         self
     }

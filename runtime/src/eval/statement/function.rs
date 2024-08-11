@@ -46,7 +46,7 @@ impl Runtime {
                     is_static,
                     name: function.name.value.0,
                     parameters,
-                    ty: function.ty.value,
+                    ty: function.ty,
                     body,
                 })),
             );

@@ -126,9 +126,9 @@ impl Runtime {
                 self.remove_scope();
 
                 if let Some(value) = args.returns {
-                    if value.is_type_of(&ty) {
-                        return value;
-                    }
+                    // if value.is_type_of(&ty) {
+                    //     return value;
+                    // }
                 }
             }
             Value::Function(func) => match func.call(span, self, args, call.lambda) {

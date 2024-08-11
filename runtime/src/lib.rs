@@ -18,7 +18,7 @@ pub mod environment;
 pub mod eval;
 pub mod value;
 
-pub type FunctionTuple = (Visibility, bool, bool, bool, String, Vec<Parameter>, Type);
+pub type FunctionTuple = (Visibility, bool, bool, bool, String, Vec<Parameter>, Option<Positioned<Type>>);
 
 macro_rules! try_unpack {
     ($variant:path, $value:expr) => {

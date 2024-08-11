@@ -155,8 +155,11 @@ pub fn parse_pratt_expr(
     precedence: Precedence,
 ) -> TokenResult<Positioned<Expression>> {
     let (input, left) = parse_atom(input)?;
-
+    //println!("fuck:{:?},=={:?}",input,left);
     go_parse_pratt_expr(input, precedence, left)
+
+
+
 }
 
 pub fn go_parse_pratt_expr(
@@ -165,25 +168,30 @@ pub fn go_parse_pratt_expr(
     left: Positioned<Expression>,
 ) -> TokenResult<Positioned<Expression>> {
     let (second_input, tokens) = take(1usize)(input)?;
+   // println!("fuck:{:?},=={:?}",second_input,tokens.tok.is_empty() );
 
     if tokens.tok.is_empty() {
         Ok((second_input, left))
     } else {
         let p = PrecedencedOperation::from_ref(&tokens.tok[0]);
+       // println!("======{:?}======",p);
 
         match p {
             (Precedence::PCall, _) if precedence < Precedence::PCall => {
                 let (input, left) = parse_call_expression(input, left)?;
+                println!("1===========");
 
                 go_parse_pratt_expr(input, precedence, left)
             }
             (Precedence::PIndex, _) if precedence < Precedence::PIndex => {
                 let (input, left) = parse_index_expression(input, left)?;
+                println!("2============");
 
                 go_parse_pratt_expr(input, precedence, left)
             }
             (ref peek_precedence, _) if precedence < *peek_precedence => {
                 let (input, left) = parse_binary_operation_expression(input, left)?;
+                println!("3============");
 
                 go_parse_pratt_expr(input, precedence, left)
             }
@@ -193,7 +201,7 @@ pub fn go_parse_pratt_expr(
 }
 
 pub fn parse_expression(input: Tokens) -> TokenResult<Positioned<Expression>> {
-    //println!("==if=={:?}==",parse_pratt_expr(input, Precedence::PLowest));
+   println!("==if=={:?}==", input );
     parse_pratt_expr(input, Precedence::PLowest)
 }
 
@@ -201,7 +209,7 @@ pub fn parse_atom(input: Tokens) -> TokenResult<Positioned<Expression>> {
     alt((
         parse_new_expression,
         parse_switch_expression,
-        parse_arrow_function_expression,
+        //parse_arrow_function_expression,
         parse_array,
         parse_code_block_expression,
         parse_literal_expression,

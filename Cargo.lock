@@ -133,6 +133,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde"
+version = "1.0.205"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e33aedb1a7135da52b7c21791455563facbbcc43d0f0f66165b42c21b3dfb150"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.205"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "692d6f5ac90220161d6774db30c662202721e64aed9058d2c394f451261420c1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.53",
+]
+
+[[package]]
 name = "stable_deref_trait"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -170,6 +190,7 @@ dependencies = [
 name = "tests"
 version = "0.0.0"
 dependencies = [
+ "nom",
  "tsr-lexer",
  "tsr-macro",
  "tsr-parser",
@@ -182,6 +203,7 @@ version = "0.0.0"
 dependencies = [
  "nom",
  "nom_locate",
+ "serde",
 ]
 
 [[package]]
