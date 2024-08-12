@@ -1,57 +1,33 @@
 use nom::branch::alt;
+use nom::bytes::complete::tag;
 use nom::combinator::{map, opt};
 use nom::sequence::terminated;
-use tsr_lexer::globals::{Positioned, TokenResult};
+use tsr_lexer::globals::{Input, PineResult, Positioned, TokenResult};
 use tsr_lexer::state::AstState;
 use tsr_lexer::tokens::Tokens;
-use crate::ast::Statement;
-use crate::Parser;
+ use crate::Parser;
+use tsr_ast::node::statement::Statement;
 
 use crate::parsing::statement::{class, enumeration, export, expression, function, if_else, import, interface, returning, type_alias, variable};
-use crate::tags::{positioned, semi_tag};
+use crate::tags::{positioned, semi_tag, spaned};
 
 impl Parser {
-    //pub fn parse_program_statement(&self,input: Tokens) -> TokenResult<Positioned<Statement>> {
-    pub fn parse_program_statement<'a>(&'a self, input: Tokens<'a>) -> TokenResult<Positioned<Statement>> {
-        let parse_function_declaration = |input| self.parse_function_declaration(input);
+    pub fn parse_program_statement<'a>(&'a self, input: Input<'a>) -> PineResult<Positioned<Statement>> {
 
+       let parse_enum_declaration=|input|self.parse_enum_declaration(input);
+       let parse_variable_statement=|input|self.parse_variable_statement(input);
         terminated(
-            positioned(alt((
-                map(import::parse_import_declaration, |declaration| {
-                    Statement::ImportDeclaration(Box::new(declaration))
-                }),
+            spaned(alt((
                 map(
-                    export::parse_export_declaration,
-                    Statement::ExportDeclaration,
-                ),
-                map(
-                    type_alias::parse_type_alias_declaration,
-                    Statement::TypeAliasDeclaration,
-                ),
-                map(class::parse_class_declaration, Statement::ClassDeclaration),
-                map(
-                    interface::parse_interface_declaration,
-                    Statement::InterfaceDeclaration,
-                ),
-                map(
-                    parse_function_declaration,
-                    Statement::FunctionDeclaration,
-                ),
-                map(
-                    enumeration::parse_enum_declaration,
+                    parse_enum_declaration,
                     Statement::EnumDeclaration,
                 ),
                 map(
-                    variable::parse_variable_statement,
-                    Statement::VariableStatement,
+                    parse_variable_statement,
+                    Statement::EnumDeclaration,
                 ),
-                map(if_else::parse_if_statement, |statement| {
-                    Statement::IfStatement(Box::new(statement))
-                }),
-                returning::parse_return_statement,
-                map(expression::parse_expression, Statement::Expression),
             ))),
-            opt(semi_tag),
+            opt(tag(";")),
         )(input)
     }
 }

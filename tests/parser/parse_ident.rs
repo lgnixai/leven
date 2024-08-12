@@ -16,7 +16,6 @@ mod tests {
     use tsr_parser::Parser;
     use tsr_parser::parsing::statement::expression::parse_expression;
     use tsr_parser::tags::{fat_arrow_tag, position};
-    use crate::parse_arrow::parser;
 
     pub type Input<'a> = LocatedSpan<&'a str>;
 
@@ -40,6 +39,9 @@ mod tests {
     fn test_arrow(){
 
         let input = Input::new(" myVar");
+
+        let parser=Parser::new();
+
         let result = parse_identifier(input);
 
         match result {
@@ -72,18 +74,5 @@ mod tests {
         //
         // assert_eq!(2 + 2, 4);
     }
-    #[test]
-    fn test_ast() {
-        let input = fs::read_to_string("parser/main.tsx").unwrap();
 
-        println!("{:?}",input);
-        let code = input.as_str();
-        let mut parser =Parser::new();
-         let (_, ast) = parser.parse_ast(new_input(code)).unwrap();
-
-
-        //let c=preceded(fat_arrow_tag, parse_expression)(ast);
-        println!("{:?}",ast);
-
-    }
 }

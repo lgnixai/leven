@@ -1,4 +1,4 @@
+enum ok
 
-disyplay()=>{
-    return x
-}
+
+

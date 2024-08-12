@@ -11,6 +11,7 @@ use tsr_lexer::{
     token::{BuiltInType, Delimiter, Modifier, Operator, Punctuation, ReservedWord, Token},
     tokens::Tokens,
 };
+use tsr_lexer::globals::{Input, PineResult};
 use tsr_lexer::state::AstState;
 
 macro_rules! tokens {
@@ -145,6 +146,26 @@ where
 {
     map(
         tuple((position, parser, position)),
+        |(start, result, end)| start.between(end).wrap(result),
+    )
+}
+
+pub fn span(input: Input) -> PineResult<Span> {
+    let (_, pos) = take(1usize)(input)?;
+
+
+    Ok((
+        input,
+        Span::default()
+
+    ))
+}
+pub fn spaned<'a, F, O1>(parser: F) -> impl FnMut(Input<'a>) -> PineResult<'a, Positioned<O1>>
+where
+    F: Parser<Input<'a>, O1, Error<Input<'a>>>,
+{
+    map(
+        tuple((span, parser, span)),
         |(start, result, end)| start.between(end).wrap(result),
     )
 }

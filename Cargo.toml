@@ -6,4 +6,5 @@ members = [
     "parser",
     "runtime",
     "tests",
+    "ast",
 ]

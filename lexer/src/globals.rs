@@ -76,5 +76,13 @@ impl<T: Debug> Debug for Positioned<T> {
 
 pub type BytesSpan<'a> = LocatedSpan<&'a [u8]>;
 
+pub type Input<'a> = LocatedSpan<&'a str>;
+
+
+pub fn new_input(input: &str) -> Input<'_> {
+    Input::new(input)
+}
+
 pub type TokenResult<'a, T> = IResult<Tokens<'a>, T>;
 pub type ByteResult<'a, T> = IResult<BytesSpan<'a>, T>;
+pub type PineResult<'a, T> = IResult<Input<'a>, T>;

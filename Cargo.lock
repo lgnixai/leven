@@ -191,10 +191,19 @@ name = "tests"
 version = "0.0.0"
 dependencies = [
  "nom",
+ "nom_locate",
+ "tsr-ast",
  "tsr-lexer",
  "tsr-macro",
  "tsr-parser",
  "tsr-runtime",
+]
+
+[[package]]
+name = "tsr-ast"
+version = "0.0.0"
+dependencies = [
+ "tsr-lexer",
 ]
 
 [[package]]
@@ -222,6 +231,7 @@ version = "0.0.0"
 dependencies = [
  "nom",
  "nom_locate",
+ "tsr-ast",
  "tsr-lexer",
 ]
 

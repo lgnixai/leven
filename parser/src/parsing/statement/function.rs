@@ -43,7 +43,7 @@ pub fn parse_function_declaration(input: Tokens) -> TokenResult<Positioned<Funct
     positioned(map(
         tuple((
             opt(positioned(value(Modifier::Async, async_tag))),
-             parse_ident,
+            parse_ident,
             parse_call_signature,
             opt( parse_code_block),
         )),
