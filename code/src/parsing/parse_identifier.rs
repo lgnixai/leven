@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use nom::{
     branch::alt,
     bytes::complete::take_while1,
@@ -7,6 +8,10 @@ use nom::{
     IResult,
 };
 use nom::bytes::complete::take_while;
+use nom::combinator::map;
+use crate::ast::identifier::Identifier;
+use crate::input::{Input, PineResult};
+use crate::inputctx::ParserCtx;
 
 fn is_valid_start_char(c: char) -> bool {
     c.is_alphabetic() || c == '_'
@@ -17,11 +22,17 @@ fn is_valid_char(c: char) -> bool {
 }
 
 // 识别标识符的解析器
-pub fn parse_identifier(input: &str) -> IResult<&str, &str> {
-    recognize(pair(
+pub fn parse_identifier(input:Input) -> PineResult<Identifier> {
+    // recognize(pair(
+    //     take_while(is_valid_start_char),
+    //     take_while(is_valid_char)
+    // ))(input)
+
+    map(recognize(pair(
         take_while(is_valid_start_char),
-        take_while(is_valid_char)
-    ))(input)
+        take_while(is_valid_char),
+    )), |s:Input| Identifier::new(s.to_string(),0))(input)
+
 }
 
 #[test]
@@ -40,7 +51,9 @@ fn main() {
     ];
 
     for input in inputs {
-        match parse_identifier(input) {
+        let mut path = PathBuf::new();
+        let ctx=ParserCtx::new(path);
+        match parse_identifier(Input::new_extra(input,ctx)) {
             Ok((remaining, parsed)) => {
                 println!("Parsed identifier: {}, Remaining: {}", parsed, remaining);
             }

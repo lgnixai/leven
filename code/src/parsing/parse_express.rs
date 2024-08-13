@@ -12,20 +12,28 @@ use nom::combinator::{map, map_res};
 use nom::number::complete::float;
 use nom::sequence::delimited;
 use crate::ast::node::{Expr, Literal};
-use crate::parsing::parse_function::parse_function_call;
-use crate::parsing::parse_ident::parse_identifier;
+use crate::input::{Input, PineResult};
+use crate::parsing::parse_function_call::parse_function_call;
+use crate::parsing::parse_identifier::parse_identifier;
 use crate::parsing::parse_literal::parse_literal;
-use crate::parsing::parse_op::parse_binary_op;
+use crate::parsing::parse_op::{parse_binary_operation};
 
+// 解析单项表达式（term）的函数
+fn parse_term(input: Input) -> PineResult< Expr> {
+    let (input, var) = parse_identifier(input)?;
+    Ok((input, Expr::Variable(input.fragment().to_string())))
+}
 
-pub fn parse_expr(input: &str) -> IResult<&str, Expr> {
+pub fn parse_expr(input: Input) -> PineResult< Expr> {
     alt((
+        parse_term,
         // 字面量表达式
         map(parse_literal, Expr::Literal),
         // 变量表达式
-        map(parse_identifier, |id: &str| Expr::Variable(id.to_string())),
+        map(parse_identifier, |id| Expr::Variable(id.to_string())),
+
         // 二元运算
-        parse_binary_op,
+        parse_binary_operation,
         // 函数调用
         parse_function_call,
         // 其他表达式

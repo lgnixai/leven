@@ -1,3 +1,6 @@
+use crate::ast::identifier::Identifier;
+use crate::ast::enums::EnumDeclaration;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
     // 表达式节点
@@ -5,15 +8,63 @@ pub enum AstNode {
     // 语句节点
     Stmt(Stmt),
 }
+#[derive(Debug, Clone, PartialEq)]
+pub enum Atom {
+    String(String),
+    Variable(String),
+    Boolean(bool),
+    Integer(i64),
+    Double(f64),
+
+    // 其他字面量类型
+}
+
+impl From<Atom> for Expr {
+    fn from(atom: Atom) -> Self {
+        Expr::Atom(atom)
+    }
+}
+#[derive(Debug, Clone, PartialEq)]
+pub struct Block {
+    pub statements: Vec<Stmt>,
+    pub return_expr: Expr,
+}
+
+#[derive(Debug, Clone)]
+pub struct Body {
+    pub stmts: Vec<Stmt>,
+}
+
+
+
+impl Body {
+    pub fn new(stmts: Vec<Stmt>) -> Self {
+        Self { stmts }
+    }
+
+    // pub fn with_return_self(&mut self, self_node_id: NodeId) {
+    //     let identifier = Identifier::new("self".to_string(), self_node_id);
+    //     let operand = Operand::new_identifier(identifier);
+    //     // FIXME: should have a valid node_id ?
+    //     let primary = PrimaryExpr::new(0, operand, vec![]);
+    //     let unary = UnaryExpr::PrimaryExpr(primary);
+    //     let expr = Expression::new_unary(unary);
+    //     let stmt = Statement::new_expression(expr);
+    //
+    //     self.stmts.push(stmt);
+    // }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
+    Atom(Atom),
     // 字面量，如数字、字符串、布尔值等
     Literal(Literal),
     // 变量
     Variable(String),
     // 二元运算，如加减乘除
-    BinaryOp(Box<Expr>, BinOp, Box<Expr>),
+    BinaryOp(Box<Expr>, BinaryOperation, Box<Expr>),
+
     // 一元运算，如负号
     UnaryOp(UnOp, Box<Expr>),
     // 函数调用
@@ -21,7 +72,7 @@ pub enum Expr {
         name: String,
         args: Vec<Expr>,
     },
-
+    Na
 
 }
 
@@ -30,8 +81,22 @@ pub enum Literal {
     Int(i32),
     Float(f64),
     Bool(bool),
+    Integer(i64),
+    Double(f64),
     String(String),
+    Variable(String),
+
     // 其他字面量类型
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum BinaryOperation {
+    Plus,
+    Minus,
+    Times,
+    Divide,
+    Equal,
+    NotEqual,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -56,11 +121,13 @@ pub enum UnOp {
     Neg,    // 负号
     Not,    // 逻辑非
 }
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum DeclarationMode {
     Var,
     Varip,
 }
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Type {
     Int,
@@ -78,15 +145,49 @@ pub enum Type {
     UDF,
     // 其他类型
 }
+#[derive(Debug, PartialEq)]
+pub struct FunctionDeclaration {
+    pub(crate) name: String,                        // 函数名称
+    pub(crate) params: Vec<Parameter>,              // 参数列表
+    pub body: Block,
+}
+
+// 参数定义
+#[derive(Debug, PartialEq)]
+pub struct Parameter {
+    pub(crate) name: String,                        // 参数名称
+    pub(crate) default_value: Option<Expr>,         // 可选的默认值
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Variable {
+    pub(crate) declaration_mode: Option<DeclarationMode>,
+    pub(crate) var_type: Option<Type>,
+    pub(crate) identifier: Identifier,
+    pub(crate) value: Expr,
+}
 #[derive(Debug, Clone, PartialEq)]
 pub enum Stmt {
+    Return(Expr),
+    Enum(EnumDeclaration),
+    Variable(Variable),
     // 变量声明
-    VariableDeclaration {
-        declaration_mode: Option<DeclarationMode>,
-        var_type: Option<Type>,
-        identifier: String,
-        value: Expr,
-    },
+    // VariableDeclaration {
+    //     declaration_mode: Option<DeclarationMode>,
+    //     var_type: Option<Type>,
+    //     //identifier: Identifier,
+    //     value: Expr,
+    // },
+
+    // FunctionDeclaration {
+    //     name: String,                        // 函数名称
+    //     params: Vec<Stmt::Parameter>,              // 参数列表
+    //     body: Vec<Stmt>,                     // 函数体，包含多个语句
+    // },
+    // Parameter {
+    //     name: String,                        // 参数名称
+    //     default_value: Option<Expr>,         // 可选的默认值
+    // },
     // 元组声明
     TupleDeclaration {
         identifiers: Vec<String>,
@@ -115,5 +216,5 @@ pub enum Stmt {
         body: Vec<Stmt>,
         return_value: Option<Expr>,
     },
-    // 其他语句类型
+// 其他语句类型
 }

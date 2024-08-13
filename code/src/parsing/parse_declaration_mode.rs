@@ -11,9 +11,10 @@ use nom::character::complete::not_line_ending;
 use nom::combinator::map;
 use nom::sequence::terminated;
 use crate::ast::node::{DeclarationMode, Stmt, Type};
-use crate::parsing::parse_ident::parse_identifier;
+use crate::input::{Input, PineResult};
+use crate::parsing::parse_identifier::parse_identifier;
 
-pub fn parse_declaration_mode(input: &str) -> IResult<&str, DeclarationMode> {
+pub fn parse_declaration_mode(input: Input) -> PineResult< DeclarationMode> {
     alt((
         map(tag("varip"), |_| DeclarationMode::Varip),
 

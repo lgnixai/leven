@@ -11,11 +11,12 @@ use nom::character::complete::not_line_ending;
 use nom::combinator::map;
 use nom::sequence::terminated;
 use crate::ast::node::{DeclarationMode, Stmt, Type};
-use crate::parsing::parse_ident::parse_identifier;
+use crate::input::{Input, PineResult};
+use crate::parsing::parse_identifier::parse_identifier;
 
 
 
-pub fn parse_type(input: &str) -> IResult<&str, Type> {
+pub fn parse_type(input: Input) -> PineResult< Type> {
     alt((
 
         map(tag("int"), |_| Type::Int),

@@ -12,19 +12,38 @@ use nom::combinator::{map, map_res};
 use nom::number::complete::float;
 use nom::sequence::delimited;
 use crate::ast::node::{Literal, Stmt};
+use crate::input::{Input, PineResult};
 use crate::parsing::parse_assign::parse_assignment;
+use crate::parsing::parse_enums::parse_enum_declaration;
 use crate::parsing::parse_express::parse_expr;
-use crate::parsing::parse_for::parse_for_stmt;
 use crate::parsing::parse_variable::parse_variable_declaration;
 
 
-pub fn parse_stmt(input: &str) -> IResult<&str, Stmt> {
+pub fn parse_stmt(input: Input) -> PineResult<Stmt> {
     alt((
-        parse_assignment,
-        // parse_if_stmt,
-        // parse_while_stmt,
-        parse_for_stmt,
-        map(parse_expr, Stmt::ExprStmt),
-        // 其他语句解析
+        map(parse_assignment, |declaration| {
+            Stmt::Variable(declaration)
+        }),
+        map(parse_enum_declaration, |declaration| {
+            Stmt::Enum((declaration))
+        }),
     ))(input)
+    // alt((
+    //
+    //     map(parse_assignment, |declaration| {
+    //         Stmt::Variable(Box::new(declaration))
+    //     }),
+    //
+    //     // map(parse_enum_declaration, |declaration| {
+    //     //     Stmt::Enum(Box::new(declaration))
+    //     // }),
+    //    //  //parse_assignment,
+    //    //  parse_enum_declaration,
+    //    // // parse_expr,
+    //     // parse_if_stmt,
+    //     // parse_while_stmt,
+    //     //parse_for_stmt,
+    //     //map(parse_expr, Stmt::ExprStmt),
+    //     // 其他语句解析
+    // ))(input)
 }
