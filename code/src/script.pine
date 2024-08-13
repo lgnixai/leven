@@ -1,0 +1,6 @@
+
+linestyle(_input) =>
+    _input == "___"?line.style_solid:
+     _input == "- - -"?line.style_dashed:
+     _input == ". . ."?line.style_dotted:
+     na

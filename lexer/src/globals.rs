@@ -78,6 +78,17 @@ pub type BytesSpan<'a> = LocatedSpan<&'a [u8]>;
 
 pub type Input<'a> = LocatedSpan<&'a str>;
 
+impl From<Input<'_>> for Span {
+    fn from(value: Input) -> Self {
+        Span {
+            start: value.location_offset(),
+            end: value.location_offset() + value.input_len(),
+            line: value.location_line(),
+            column: value.naive_get_utf8_column(),
+        }
+    }
+}
+
 
 pub fn new_input(input: &str) -> Input<'_> {
     Input::new(input)

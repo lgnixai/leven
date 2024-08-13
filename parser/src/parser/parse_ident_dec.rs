@@ -15,7 +15,6 @@ pub fn parse_identifier(input: Input) -> PineResult<Positioned<Ident>> {
     //     )),|()| Ident::new(name)
     // ))(input)
 
-
     spaned(map(
         preceded(multispace0, alphanumeric1),
         |s: Input| Ident::new(*s.fragment()), // 这里将 &str 转换为 String

@@ -50,7 +50,7 @@ impl Parser {
      pub fn parse_variable_statement<'a>(&'a self, input: Input<'a>) -> PineResult<Positioned<EnumDeclaration>> {
          spaned(map(
              tuple((
-                 spaned( tag("enum1")),
+                 spaned( tag("enum")),
                  parse_identifier,
              )),
              |(_, name)| EnumDeclaration { name },
