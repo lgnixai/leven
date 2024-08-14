@@ -48,19 +48,29 @@ pub fn parse_function_body(input:Input) -> PineResult<Body> {
     //     pair(eol(), blank_lines()),
     //     recognize(pair(discard_indent(current_indent), space1)),
     // )
-
-    alt((
-
-        preceded(
-            delimited(space0, tag("=>"), space0),
-            preceded( pair(eol(), blank_lines()),parse_single_line_body),
-        ),
-        delimited(
-            delimited(space0, tag("=>"), space0),
-            preceded( pair(eol(), blank_lines()),parse_body),
+    delimited(
+        tuple((multispace0, tag("=>"), multispace0)),
+        parse_body,
+        // preceded( pair(eol(), blank_lines()),parse_body),
 
 
-            multispace0,
-        )
-    ))(input)
+        multispace0,
+    )(input)
+//     alt((
+// //         tuple((multispace0, tag("=>"), multispace0)),
+//
+//         preceded(
+//             tuple((multispace0, tag("=>"), multispace0)),
+//             parse_single_line_body,
+//             //preceded( pair(eol(), blank_lines()),parse_single_line_body),
+//         ),
+//         delimited(
+//             tuple((multispace0, tag("=>"), multispace0)),
+//             parse_body,
+//            // preceded( pair(eol(), blank_lines()),parse_body),
+//
+//
+//             multispace0,
+//         )
+//     ))(input)
 }

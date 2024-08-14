@@ -6,6 +6,7 @@ pub mod state;
 pub mod error;
 pub mod identifier;
 pub mod enums;
+mod datatype;
 
 pub type NodeId = u64;
 

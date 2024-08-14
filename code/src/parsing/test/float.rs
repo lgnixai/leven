@@ -11,7 +11,7 @@ fn test_eol() {
     let mut path = PathBuf::new();
     let ctx=ParserCtx::new(path);
 
-    let input = r#"genv(x,y)=>asdfas+x"#;
+    let input = "genv(x,y)=>asdfas+x\n";
 
     println!("{:?}",input);
     let result = pp.parse(Input::new_extra(input,ctx));

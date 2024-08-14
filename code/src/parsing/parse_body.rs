@@ -12,7 +12,7 @@ use crate::parsing::parse_enums::parse_enum_declaration;
 use crate::parsing::parse_function::parse_function;
 use crate::parsing::parse_stmt::parse_stmt;
 
-fn indent<'a, O, E, F>(mut parser: F) -> impl FnMut(Input<'a>) -> IResult<Input<'a>, O, E>
+pub fn indent<'a, O, E, F>(mut parser: F) -> impl FnMut(Input<'a>) -> IResult<Input<'a>, O, E>
     where
         F: nom::Parser<Input<'a>, O, E>,
 {
@@ -77,26 +77,40 @@ pub fn parse_block_indent_plus_one(input: Input) -> PineResult<usize> {
 
 pub fn parse_body(input: Input) -> PineResult<Body> {
 
-    println!("=========fffff");
-    let (input, opt_eol) = opt(many1(line_ending))(input)?; // NOTE: should not fail
-    //
-    if opt_eol.is_some() {
-        indent(map(
-            separated_list1(
-                many1(line_ending),
-                preceded(parse_block_indent, parse_stmt),
-            ),
-            Body::new,
-        ))(input)
-    } else {
-        // let b=String::from(input.fragment().to_string());
-        map(parse_stmt, |stmt| Body::new(vec![stmt]))(input)
-    }
+    println!("1==={:?}",input );
+
+    // let (input, opt_eol) = opt(many1(line_ending))(input)?; // NOTE: should not fail
+    // println!("2==={:?}",opt_eol.is_some());
+    // if opt_eol.is_some() {
+    //     indent(map(
+    //         separated_list1(
+    //             many1(line_ending),
+    //             preceded(parse_block_indent, parse_stmt),
+    //         ),
+    //         Body::new,
+    //     ))(input)
+    // } else {
+    //     println!("单行");
+    //     // let b=String::from(input.fragment().to_string());
+    //     map(parse_stmt, |stmt| Body::new(vec![stmt]))(input)
+    // }
+
+    indent(map(
+        separated_list1(
+            many1(line_ending),
+            preceded(parse_block_indent, parse_stmt),
+        ),
+        Body::new,
+    ))(input)
 }
 
 #[test]
 fn main() {
-    let input = r#"genv(x,y)=>x+3
+    let input = r#"genv(x,y)=>
+
+    a=x+3
+    c=a+b
+
     "#;
     let mut path = PathBuf::new();
     let ctx=ParserCtx::new(path);

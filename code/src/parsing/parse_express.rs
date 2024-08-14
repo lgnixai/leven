@@ -12,6 +12,7 @@ use nom::combinator::{map, map_res};
 use nom::number::complete::float;
 use nom::sequence::delimited;
 use crate::ast::node::{Expr, Literal};
+use crate::ast::node::AstNode::Stmt;
 use crate::input::{Input, PineResult};
 use crate::parsing::parse_function_call::parse_function_call;
 use crate::parsing::parse_identifier::parse_identifier;
@@ -41,6 +42,7 @@ pub fn parse_expr(input: Input) -> PineResult< Expr> {
         parse_binary_operation,
         map(parse_identifier, |id| Expr::Variable(id.to_string())),
         map(parse_literal, Expr::Literal),
+        //map(take_until("\n"), |original: &str| Expr::Na),
 
         // 其他表达式
     ))(input)

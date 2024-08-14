@@ -11,7 +11,8 @@ use nom::character::complete::digit1;
 use nom::combinator::{map, map_res};
 use nom::number::complete::float;
 use nom::sequence::delimited;
-use crate::ast::node::{Literal, Stmt};
+use crate::ast::node::Stmt;
+
 use crate::input::{Input, PineResult};
 use crate::parsing::parse_assign::parse_assignment;
 use crate::parsing::parse_enums::parse_enum_declaration;
@@ -28,6 +29,9 @@ pub fn parse_stmt(input: Input) -> PineResult<Stmt> {
             Stmt::Enum((declaration))
         }),
         map(parse_expr, Stmt::ExprStmt),
+
+        //map(take_until("\n"), |s: &str| Stmt::Original(String::from(s))),
+
     ))(input)
     // alt((
     //

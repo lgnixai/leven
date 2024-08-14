@@ -153,7 +153,7 @@ pub struct FunctionDeclaration {
 }
 
 // 参数定义
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq,Clone)]
 pub struct Parameter {
     pub(crate) name: String,                        // 参数名称
     pub(crate) default_value: Option<Expr>,         // 可选的默认值
@@ -171,6 +171,7 @@ pub enum Stmt {
     Return(Expr),
     Enum(EnumDeclaration),
     Variable(Variable),
+    Original(String),
     // 变量声明
     // VariableDeclaration {
     //     declaration_mode: Option<DeclarationMode>,
