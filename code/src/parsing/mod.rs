@@ -1,3 +1,9 @@
+use nom::bytes::complete::{is_not, tag};
+use nom::character::complete::{line_ending, space0};
+use nom::combinator::opt;
+use nom::multi::many0;
+use nom::sequence::{pair, tuple};
+
 pub mod parse_identifier;
 pub mod parse_assign;
 mod take;
@@ -18,3 +24,5 @@ mod parse_block;
 mod parse_enums;
 mod parse_indent;
 mod parse_body;
+pub mod utils;
+

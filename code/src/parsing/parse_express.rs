@@ -21,21 +21,27 @@ use crate::parsing::parse_op::{parse_binary_operation};
 // 解析单项表达式（term）的函数
 fn parse_term(input: Input) -> PineResult< Expr> {
     let (input, var) = parse_identifier(input)?;
-    Ok((input, Expr::Variable(input.fragment().to_string())))
+    Ok((input, Expr::Variable(var.name)))
 }
 
 pub fn parse_expr(input: Input) -> PineResult< Expr> {
+
+
+   // println!("==={:?}",input);
     alt((
-        parse_term,
+        //parse_term,
         // 字面量表达式
-        map(parse_literal, Expr::Literal),
         // 变量表达式
-        map(parse_identifier, |id| Expr::Variable(id.to_string())),
 
         // 二元运算
-        parse_binary_operation,
+
         // 函数调用
         parse_function_call,
+
+        parse_binary_operation,
+        map(parse_identifier, |id| Expr::Variable(id.to_string())),
+        map(parse_literal, Expr::Literal),
+
         // 其他表达式
     ))(input)
 }

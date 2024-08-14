@@ -8,8 +8,6 @@ use nom::{
 use nom::bytes::complete::tag;
 use crate::input::{Input, PineResult, Positioned, Span};
 
-
-
 macro_rules! tags {
     ($($func_name:ident => $tag:expr;)*) => {
         $(
@@ -111,15 +109,16 @@ tags! {
     // eof_tag => Token::EOF;
 }
 
-
 pub fn span(input: Input) -> PineResult<Span> {
-    let (_, pos) = take(1usize)(input)?;
+    let (_, pos) = take(1usize)(input.clone())?;
+    let a=input.clone();
+
     Ok((
-        input,
-        Span::default()
+        a,
+        Span::from(pos)
+
     ))
 }
-
 pub fn spaned<'a, F, O1>(parser: F) -> impl FnMut(Input<'a>) -> PineResult<'a, Positioned<O1>>
     where
         F: Parser<Input<'a>, O1, Error<Input<'a>>>,
@@ -131,5 +130,16 @@ pub fn spaned<'a, F, O1>(parser: F) -> impl FnMut(Input<'a>) -> PineResult<'a, P
 }
 
 fn to_positioned(span: Input<'_>) -> Positioned<Input<'_>> {
-    Positioned::new(span, Span::from(span))
+    let input=span.clone();
+    Positioned::new(span, Span::from(input))
+}
+pub fn ok_tag(input: Input<'_>) -> PineResult<Positioned<Input<'_>>> {
+
+    // 使用 verify 进行验证
+    verify(map(tag("ok"), |s: Input<'_>| to_positioned(s)), |pos: &Positioned<Input<'_>>| {
+        println!("{:?}", pos.value.fragment());
+        pos.value.fragment().to_string() == "ok" // 确保片段值为 "ok"
+    })(input)
+
+
 }

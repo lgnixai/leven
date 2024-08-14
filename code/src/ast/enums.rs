@@ -3,7 +3,7 @@
 
 pub struct EnumDeclaration {
     pub(crate) name: String,
-    pub(crate) fields: Vec<EnumField>,
+    //pub(crate) fields: Vec<EnumField>,
 }
 
 #[derive(Debug, Clone, PartialEq)]

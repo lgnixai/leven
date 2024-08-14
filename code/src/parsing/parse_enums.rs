@@ -19,18 +19,18 @@ use crate::parsing::parse_identifier::parse_identifier;
 // }
 
 // 解析枚举字段及其可选标题
-fn parse_enum_field(input: Input) -> PineResult<  EnumField> {
-
-    map(tuple((
-        parse_identifier,
-        opt(preceded(
-            tuple((multispace0, char('='), multispace0)),
-            // 解析字段标题，允许引号
-            map(is_not("\n"), |s: &str| s.trim_matches('"').to_string()),
-        )),
-    )),|(ident,title)|EnumField { name:ident.name, title })(input)
-
-}
+// fn parse_enum_field(input: Input) -> PineResult<  EnumField> {
+//
+//     map(tuple((
+//         parse_identifier,
+//         opt(preceded(
+//             tuple((multispace0, char('='), multispace0)),
+//             // 解析字段标题，允许引号
+//             map(is_not("\n"), |s: &str| s.trim_matches('"').to_string()),
+//         )),
+//     )),|(ident,title)|EnumField { name:ident.name, title })(input)
+//
+// }
 
 // 解析枚举声明
 pub fn parse_enum_declaration(input: Input) -> PineResult<  EnumDeclaration> {
@@ -41,9 +41,9 @@ pub fn parse_enum_declaration(input: Input) -> PineResult<  EnumDeclaration> {
     let (input, _) = line_ending(input)?; // 解析枚举名后的换行符
 
     // 解析枚举字段，按行分隔
-    let (input, fields) = separated_list1(line_ending, preceded(multispace1, parse_enum_field))(input)?;
+    //let (input, fields) = separated_list1(line_ending, preceded(multispace1, parse_enum_field))(input)?;
 
-    Ok((input, EnumDeclaration { name:ident.name, fields }))
+    Ok((input, EnumDeclaration { name:ident.name }))
 }
 
 #[test]

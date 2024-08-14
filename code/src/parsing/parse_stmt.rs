@@ -27,6 +27,7 @@ pub fn parse_stmt(input: Input) -> PineResult<Stmt> {
         map(parse_enum_declaration, |declaration| {
             Stmt::Enum((declaration))
         }),
+        map(parse_expr, Stmt::ExprStmt),
     ))(input)
     // alt((
     //

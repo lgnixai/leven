@@ -19,10 +19,23 @@ use crate::parsing::parse_identifier::parse_identifier;
 use crate::parsing::parse_type::parse_type;
 use crate::parsing::parse_variable::parse_variable_declaration;
 
+// pub fn parse_assign(input: Parser) -> Res<Parser, Assign> {
+//     map(
+//         tuple((
+//             opt(terminated(tag("let"), space1)),
+//             terminated(parse_assign_left_side, space0),
+//             terminated(tag("="), space0),
+//             terminated(parse_expression, space0),
+//         )),
+//         |(opt_let, var, _, expr)| Assign::new(var, expr, opt_let.is_some()),
+//     )(input)
+// }
+
 pub fn parse_assignment(input: Input) -> PineResult<Variable> {
     map(
         tuple((
             parse_variable_declaration,
+
             preceded(multispace0, char('=')),
             preceded(multispace0, not_line_ending),
         )),

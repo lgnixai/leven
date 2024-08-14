@@ -1,15 +1,18 @@
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::{multispace0, space0};
-use nom::combinator::opt;
+use nom::character::complete::{multispace0, space0, space1};
+use nom::combinator::{opt, recognize};
 use nom::IResult;
 use nom::multi::{many0, separated_list0};
-use nom::sequence::{delimited, preceded};
-use crate::ast::node::{Block, Parameter};
+use nom::sequence::{delimited, pair, preceded, tuple};
+use crate::ast::node::{Block, Body, Parameter};
+use crate::ast::node::Stmt::Return;
 use crate::input::{Input, PineResult};
+use crate::parsing::parse_body::parse_body;
 use crate::parsing::parse_express::parse_expr;
 use crate::parsing::parse_identifier::parse_identifier;
 use crate::parsing::parse_stmt::parse_stmt;
+use crate::parsing::utils::{blank_lines, eol};
 
 pub fn parse_parameter(input:Input) -> PineResult< Parameter> {
     let (input, ident) = parse_identifier(input)?;
@@ -35,20 +38,28 @@ pub fn parse_block(input:Input) -> PineResult<Block> {
     Ok((input, Block { statements, return_expr }))
 }
 
-fn parse_single_line_body(input:Input) -> PineResult<Block> {
+fn parse_single_line_body(input:Input) -> PineResult<Body> {
     let (input, return_expr) = parse_expr(input)?;
-    Ok((input, Block { statements: Vec::new(), return_expr }))
+    Ok((input, Body::new(vec![Return(return_expr)])))
 }
 
-pub fn parse_function_body(input:Input) -> PineResult<Block> {
+pub fn parse_function_body(input:Input) -> PineResult<Body> {
+    // let (input, prefix) = preceded(
+    //     pair(eol(), blank_lines()),
+    //     recognize(pair(discard_indent(current_indent), space1)),
+    // )
+
     alt((
+
         preceded(
             delimited(space0, tag("=>"), space0),
-            parse_single_line_body,
+            preceded( pair(eol(), blank_lines()),parse_single_line_body),
         ),
         delimited(
             delimited(space0, tag("=>"), space0),
-            parse_block,
+            preceded( pair(eol(), blank_lines()),parse_body),
+
+
             multispace0,
         )
     ))(input)

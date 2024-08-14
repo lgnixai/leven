@@ -25,7 +25,9 @@ use crate::parsing::parse_stmt::parse_stmt;
 
 use crate::parsing::parse_type::parse_type;
 
-fn parse_function(input:Input) -> PineResult< FunctionDeclaration> {
+pub fn parse_function(input:Input) -> PineResult< FunctionDeclaration> {
+
+    println!("{:?}",input.fragment());
     let (input, ident) = parse_identifier(input)?;
     let (input, params) = parse_parameter_list(input)?;
     let (input, body) = parse_function_body(input)?;

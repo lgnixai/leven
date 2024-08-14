@@ -30,7 +30,7 @@ pub struct Block {
     pub return_expr: Expr,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Body {
     pub stmts: Vec<Stmt>,
 }
@@ -149,7 +149,7 @@ pub enum Type {
 pub struct FunctionDeclaration {
     pub(crate) name: String,                        // 函数名称
     pub(crate) params: Vec<Parameter>,              // 参数列表
-    pub body: Block,
+    pub body: Body,
 }
 
 // 参数定义

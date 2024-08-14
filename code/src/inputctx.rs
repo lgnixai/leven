@@ -1,16 +1,18 @@
 use std::collections::{BTreeMap, HashMap};
 use std::path::PathBuf;
+use crate::ast::NodeId;
+use crate::input::{Input, Span};
 
 #[derive(Debug, Clone)]
 pub struct ParserCtx {
     // files: HashMap<PathBuf, SourceFile>,
     // diagnostics: Diagnostics,
     cur_file_path: PathBuf,
-    //identities: BTreeMap<NodeId, Span>,
+    identities: BTreeMap<NodeId, Span>,
     operators_list: HashMap<String, u8>,
     pub(crate) block_indent: usize,
     pub(crate) first_indent: Option<usize>,
-   // next_node_id: NodeId,
+    next_node_id: NodeId,
     //structs: HashMap<String, Type>,
     //pub config: Config,
     allow_newline_dot: Vec<()>,
@@ -21,11 +23,11 @@ impl ParserCtx {
         Self {
             //files: HashMap::new(),
             cur_file_path: file_path,
-            //identities: BTreeMap::new(),
+            identities: BTreeMap::new(),
             operators_list: HashMap::new(),
             block_indent: 0,
             first_indent: None,
-            // next_node_id: 0,
+            next_node_id: 0,
             // structs: HashMap::new(),
             // diagnostics: Diagnostics::default(),
             // config,
@@ -90,15 +92,15 @@ impl ParserCtx {
     //     }
     // }
     //
-    // pub fn new_identity(&mut self, span: Span) -> NodeId {
-    //     let node_id = self.next_node_id;
-    //
-    //     self.next_node_id += 1;
-    //
-    //     self.identities.insert(node_id, span);
-    //
-    //     node_id
-    // }
+    pub fn new_identity(&mut self, span: Span) -> NodeId {
+        let node_id = self.next_node_id;
+
+        self.next_node_id += 1;
+
+        self.identities.insert(node_id, span);
+
+        node_id
+    }
 
     pub fn current_file_path(&self) -> &PathBuf {
         &self.cur_file_path

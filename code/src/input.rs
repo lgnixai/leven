@@ -2,6 +2,8 @@ use std::cell::Cell;
 use nom::{IResult, InputLength};
 use nom_locate::LocatedSpan;
 use std::fmt::Debug;
+use nom::error::ErrorKind;
+use nom_greedyerror::GreedyError;
 use crate::inputctx::ParserCtx;
 
 #[derive(Clone, Copy, PartialEq, Debug, Eq, Hash, Default)]
@@ -37,6 +39,8 @@ impl From<BytesSpan<'_>> for Span {
         }
     }
 }
+
+
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Positioned<T> {
@@ -77,7 +81,6 @@ impl<T: Debug> Debug for Positioned<T> {
 pub type BytesSpan<'a> = LocatedSpan<&'a [u8]>;
 //pub type Input<'a> = LocatedSpan<&'a str>;
 pub type Input<'a> = LocatedSpan<&'a str, ParserCtx>;
-
 impl From<Input<'_>> for Span {
     fn from(value: Input) -> Self {
         Span {
@@ -90,10 +93,20 @@ impl From<Input<'_>> for Span {
 }
 
 
-pub fn new_input(input: &str) -> Input<'_> {
-    Input::new(input)
-}
+// pub fn new_input(input: &str) -> Input<'_> {
+//     Input::new(input)
+// }
 
 pub type ByteResult<'a, T> = IResult<BytesSpan<'a>, T>;
+
+pub trait Parser<'a, O>: nom::Parser<Input<'a>, O, GreedyError<Input<'a>, ErrorKind>> {}
+impl<'a, O, P: nom::Parser<Input<'a>, O, GreedyError<Input<'a>, ErrorKind>>> Parser<'a, O> for P {}
+
+
+
+
+//struct MyParser<'a, O>(impl nom::Parser<Input<'a>, O, GreedyError<Input<'a>, ErrorKind>>);
+
+//impl<'a, O> Parser<'a, O> for MyParser<'a, O> {}
 pub type PineResult<'a, T> = IResult<Input<'a>, T>;
 //type Res<T, U> = IResult<T, U, VerboseError<T>>;
